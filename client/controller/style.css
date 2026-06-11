@@ -195,3 +195,70 @@ input {
   background: #f1c40f;
   color: #3a2e14;
 }
+
+/* --- Пульт мини-игры «Файтинг» --- */
+.fight-pad {
+  width: 100%;
+  display: flex;
+  gap: 14px;
+  align-items: flex-end;
+}
+
+.fp-move,
+.fp-act {
+  flex: 1;
+  display: grid;
+  gap: 10px;
+}
+
+.fp-move {
+  grid-template-columns: 1fr 1fr;
+}
+
+.fp-move .jump {
+  grid-column: 1 / 3;
+}
+
+.fp-act {
+  grid-template-columns: 1fr;
+}
+
+.fp-btn {
+  height: 76px;
+  border: 0;
+  border-radius: 14px;
+  font-size: 24px;
+  font-weight: 800;
+  color: #fff;
+  background: #2a2b33;
+  touch-action: none;
+  user-select: none;
+}
+
+.fp-btn.dir {
+  font-size: 34px;
+  background: #3498db;
+  color: #06192b;
+}
+
+.fp-btn.jump {
+  background: #1abc9c;
+  color: #042019;
+  font-size: 30px;
+}
+
+.fp-btn.punch {
+  background: #e74c3c;
+}
+
+.fp-btn.kick {
+  background: #e67e22;
+}
+
+.fp-btn.block {
+  background: #9b59b6;
+}
+
+.fp-btn.on {
+  filter: brightness(1.4);
+}

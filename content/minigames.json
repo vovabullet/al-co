@@ -1,5 +1,6 @@
 [
   { "type": "minigame", "name": "reaction", "penalty": "Самый медленный — пьёт 2 глотка" },
   { "type": "minigame", "name": "reaction", "penalty": "Кто проспал реакцию — наливает всем" },
-  { "type": "minigame", "name": "tanks", "penalty": "Проигравшие — пьют, победитель раздаёт 2 глотка" }
+  { "type": "minigame", "name": "tanks", "penalty": "Проигравшие — пьют, победитель раздаёт 2 глотка" },
+  { "type": "minigame", "name": "fighting", "penalty": "Проигравший пьёт, победитель раздаёт 2 глотка любому" }
 ]

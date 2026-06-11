@@ -81,6 +81,7 @@ socket.on('controller-change', (opts) => {
   if (opts.layout === 'input') renderInput(opts);
   else if (opts.layout === 'tap') renderTap(opts);
   else if (opts.layout === 'joystick') renderJoystick(opts);
+  else if (opts.layout === 'fight') renderFight(opts);
   else renderIdle(opts);
 });
 
@@ -148,6 +149,65 @@ function renderJoystick() {
   const release = () => shoot.classList.remove('firing');
   shoot.addEventListener('pointerup', release);
   shoot.addEventListener('pointerleave', release);
+}
+
+// Пульт файтинга: движение (◄ ► ▲) слева + удары (УДАР/НОГА/БЛОК) справа.
+function renderFight() {
+  layoutEl.innerHTML = '';
+  const pad = el('div', { class: 'fight-pad' });
+  const move = el('div', { class: 'fp-move' });
+  const act = el('div', { class: 'fp-act' });
+
+  const sendFight = (action, extra) =>
+    socket.emit('controller-input', { type: 'fight', data: Object.assign({ action }, extra) });
+
+  // Кнопка-удержание (движение/блок): ставим/снимаем состояние, ловим палец захватом.
+  const hold = (btn, onDown, onUp) => {
+    btn.addEventListener('pointerdown', (e) => {
+      e.preventDefault();
+      try { btn.setPointerCapture(e.pointerId); } catch (_) {}
+      btn.classList.add('on');
+      onDown();
+    });
+    const up = (e) => {
+      if (e) e.preventDefault();
+      btn.classList.remove('on');
+      onUp();
+    };
+    btn.addEventListener('pointerup', up);
+    btn.addEventListener('pointercancel', up);
+  };
+  // Кнопка-нажатие (прыжок/удар): одно событие на нажатие.
+  const tap = (btn, onDown) => {
+    btn.addEventListener('pointerdown', (e) => {
+      e.preventDefault();
+      btn.classList.add('on');
+      onDown();
+    });
+    const off = () => btn.classList.remove('on');
+    btn.addEventListener('pointerup', off);
+    btn.addEventListener('pointercancel', off);
+    btn.addEventListener('pointerleave', off);
+  };
+
+  const left = el('button', { class: 'fp-btn dir', text: '◄' });
+  const right = el('button', { class: 'fp-btn dir', text: '►' });
+  const jump = el('button', { class: 'fp-btn jump', text: '▲' });
+  const punch = el('button', { class: 'fp-btn punch', text: 'УДАР' });
+  const kick = el('button', { class: 'fp-btn kick', text: 'НОГА' });
+  const block = el('button', { class: 'fp-btn block', text: 'БЛОК' });
+
+  hold(left, () => sendFight('move', { dir: -1 }), () => sendFight('move', { dir: 0 }));
+  hold(right, () => sendFight('move', { dir: 1 }), () => sendFight('move', { dir: 0 }));
+  tap(jump, () => sendFight('jump'));
+  tap(punch, () => sendFight('punch'));
+  tap(kick, () => sendFight('kick'));
+  hold(block, () => sendFight('block', { pressed: true }), () => sendFight('block', { pressed: false }));
+
+  move.append(left, right, jump);
+  act.append(punch, kick, block);
+  pad.append(move, act);
+  layoutEl.appendChild(pad);
 }
 
 function renderInput(opts) {

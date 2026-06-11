@@ -13,6 +13,7 @@ const { startGame, nextCard, currentCard } = require('./gameFlow');
 const { loadContent } = require('./contentLoader');
 const reaction = require('./reaction');
 const tanks = require('./tanks');
+const fighting = require('./fighting');
 
 const PORT = process.env.PORT || 3000;
 
@@ -22,6 +23,7 @@ const io = new Server(server);
 
 reaction.init(io);
 tanks.init(io);
+fighting.init(io);
 
 // Дебаг-лог в консоль npm с отметкой времени (п.4 — помогает на вечеринке).
 function log(...args) {
@@ -115,6 +117,7 @@ function broadcastCard(card) {
   // Покидаем мини-игру (если была) — глушим её.
   if (state.currentMiniGame === 'reaction') reaction.stop();
   else if (state.currentMiniGame === 'tanks') tanks.stop();
+  else if (state.currentMiniGame === 'fighting') fighting.stop();
   state.currentMiniGame = null;
 
   io.emit('card-update', card);
@@ -130,6 +133,12 @@ function broadcastCard(card) {
     state.currentMiniGame = 'tanks';
     const drivers = tanks.start();
     log(`Мини-игра «Танки». Водителей: ${drivers.length} из ${state.players.length}`);
+    return;
+  }
+  if (card && card.type === 'minigame' && card.name === 'fighting') {
+    state.currentMiniGame = 'fighting';
+    const f = fighting.start();
+    log(`Мини-игра «Файтинг». Бойцов: ${f.length} из ${state.players.length}`);
     return;
   }
 
@@ -224,6 +233,8 @@ io.on('connection', (socket) => {
       }
     } else if (type === 'move' || type === 'shoot') {
       if (state.currentMiniGame === 'tanks') tanks.routeInput(socket.id, type, data);
+    } else if (type === 'fight') {
+      if (state.currentMiniGame === 'fighting') fighting.routeInput(socket.id, type, data);
     } else {
       log(`controller-input от ${socket.id}: type=${type}`);
     }
