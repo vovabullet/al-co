@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+    />
+    <title>al-co — контроллер</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main id="join">
+      <h1>al-co</h1>
+
+      <label>
+        Имя
+        <input id="name" maxlength="16" autocomplete="off" placeholder="Как тебя звать?" />
+      </label>
+
+      <p class="label">Цвет</p>
+      <div id="colors"></div>
+
+      <button id="go">Войти</button>
+      <p id="error" class="error" hidden></p>
+    </main>
+
+    <main id="stage" hidden>
+      <div id="badge"></div>
+      <h2 id="who"></h2>
+      <div id="layout"></div>
+    </main>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="vendor/nipplejs.min.js"></script>
+    <script src="controller.js"></script>
+  </body>
+</html>

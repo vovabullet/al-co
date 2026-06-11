@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>al-co</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <!-- Кнопка переподключения: миниатюрный QR, всегда сверху слева (п.3) -->
+    <button id="reconnect" title="Добавить игрока / переподключение">
+      <img id="reconnect-qr" alt="QR" />
+    </button>
+
+    <!-- Список подключённых игроков: слева по центру, вертикально (п.7) -->
+    <aside id="player-rail"></aside>
+
+    <!-- Лобби -->
+    <main id="lobby">
+      <h1>al-co</h1>
+      <p class="hint">Отсканируй QR телефоном или открой ссылку:</p>
+      <img id="qr" alt="QR-код для подключения" />
+      <p id="url" class="url">…</p>
+      <p class="hint">Подключено игроков: <span id="count">0</span></p>
+      <button id="start" disabled>Начать</button>
+    </main>
+
+    <!-- Игра -->
+    <main id="game" hidden>
+      <div id="card"></div>
+      <div id="answers"></div>
+      <div id="minigame" hidden></div>
+      <button id="next">Следующее →</button>
+    </main>
+
+    <!-- Конец игры -->
+    <main id="over" hidden>
+      <h1>Игра окончена</h1>
+      <p class="hint">Колода пройдена. Обнови страницу (F5) и нажми «Начать», чтобы сыграть заново.</p>
+    </main>
+
+    <!-- Модальное окно QR. Только клиентское — на игру не влияет (п.3) -->
+    <div id="qr-modal" hidden>
+      <div class="modal-backdrop" id="modal-backdrop"></div>
+      <div class="modal-box">
+        <h2>Подключение игрока</h2>
+        <img id="modal-qr" alt="QR-код" />
+        <p id="modal-url" class="url"></p>
+        <button id="modal-close">Закрыть</button>
+      </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="vendor/phaser.min.js"></script>
+    <script src="main.js"></script>
+    <script src="game.js"></script>
+  </body>
+</html>
